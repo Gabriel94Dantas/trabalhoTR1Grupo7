@@ -22,6 +22,35 @@ class Node:
     concluido com sucesso (retorna True), o no recebe um ID valido na rede,
     e informado se ele e ou nao o root node
     """
+
+
+    def distancia( a , b):
+        if a == b :
+            return 0
+        elif a < b :
+            return b - a
+        else:
+            return (2**k)+(b-a)
+
+    """
+    Onde k e o numero maximo de nos que faremos
+    """
+
+    def findNode(start, key):
+        current=start
+        while distance(current.id, key) > \
+          distance(current.next.id, key):
+            current=current.next
+            return current
+
+    def lookup(start, key):
+        node=findNode(start, key)
+        return node.data[key]
+
+    def store(start, key, value):
+        node=findNode(start, key)
+        node.data[key]=value
+
     def conectaRendezvous(self):
 
         numeroTentativas = 10
@@ -234,6 +263,7 @@ class Node:
         # Antes de retornar, volta o socket para o modo sem timer
         self.s.setblocking(1)
         return True
+
 
 if __name__ == "__main__":
     no = Node()
