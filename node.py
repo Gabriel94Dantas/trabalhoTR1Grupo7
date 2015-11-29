@@ -16,40 +16,15 @@ class Node:
         self.meuID = -1
         self.souRootNode = False
         self.rootAddr = -1
+        self.next = None
+        self.predecessor = None
+        self.data = [None] * 20
 
     """
     Esse metodo estabelece conexao com o rendezvous. Apos o metodo, se
     concluido com sucesso (retorna True), o no recebe um ID valido na rede,
     e informado se ele e ou nao o root node
     """
-
-
-    def distancia( a , b):
-        if a == b :
-            return 0
-        elif a < b :
-            return b - a
-        else:
-            return (2**k)+(b-a)
-
-    """
-    Onde k e o numero maximo de nos que faremos
-    """
-
-    def findNode(start, key):
-        current=start
-        while distance(current.id, key) > \
-          distance(current.next.id, key):
-            current=current.next
-            return current
-
-    def lookup(start, key):
-        node=findNode(start, key)
-        return node.data[key]
-
-    def store(start, key, value):
-        node=findNode(start, key)
-        node.data[key]=value
 
     def conectaRendezvous(self):
 
@@ -264,6 +239,82 @@ class Node:
         self.s.setblocking(1)
         return True
 
+"""
+Foram feitas somente as funcoes primordiais para o funcionamento
+sem previsao e simulacao de falhas devido ao pouco tempo
+"""
+
+"""
+Calcula a distancia entre duas chaves
+"""
+    def distance( a , b):
+        if a == b :
+            return 0
+        elif a < b :
+            return b - a
+        else:
+            return (2**k)+(b-a)
+"""
+Procura pelo noh mais proximo da sua chave 
+"""
+    def findNode(start, key):
+        current=start
+        while distance(current.meuID, key) > 
+          distance(current.next.meuID, key):
+            current=current.next
+            return current
+"""
+Nao consegui implementar com o modelo desejado pelo professor
+    def findFinger(node, key):
+    current=node
+    for x in range(k):
+        if distance(current.id, key) > \
+           distance(node.finger[x].id, key):
+            current=node.finger[x]
+    return current
+"""
+"""
+Retorna o conteudo do proximo noh
+"""
+    def lookup(start, key):
+        node=findNode(start, key)
+        return node.data[key]
+
+    def store(start, key, value):
+        node=findNode(start, key)
+        node.data[key]=value
+"""
+Nao tem sentido a implementacao sem o findFinger
+    def update(node):
+    for x in range(k):
+        oldEntry=node.finger[x]
+        node.finger[x]=findNode(oldEntry,
+                            (node.id+(2**x)) % (2**k))
+"""
+"""
+Adiciona um noh ao DHT
+"""
+    def join(node, rootNode):
+        nextNode = findNode(rootNode, node.meuID)
+        node.predecessor = nextNode.predecessor
+        nextNode.predecessor = node
+        node.predecessor.next = node
+        node.next = nextNode
+"""
+Retira um noh do DHT
+"""
+    def leave(node):
+        
+        for x in xrange(1,20):
+            node.predecessor.data[x] = node.data[x]
+
+        node.predecessor.next = node.next
+        node.next.predecessor = node.predecessor
+        node.next = None
+        node.predecessor = None
+
+    def dht():
+        
 
 if __name__ == "__main__":
     no = Node()
